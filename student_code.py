@@ -64,7 +64,9 @@ class VersatileDigraph():
         return [source for source, targets in self.edges.items() if node in targets]
     def successors(self, node):
         """Return a list of nodes that are directly reachable from the given node"""
-        return list(self.edges.get(node, {}).keys())
+        if node not in self.edges:
+            return []
+        return sorted(self.edges[node].keys())
     def successor_on_edge(self, node, edge_name):
         """Return the target node connected via a specific edge name from the given node"""
         if node not in self.edge_names:
