@@ -103,8 +103,8 @@ class TraversableDigraph(SortableDigraph):
     '''adds depth first and breadth first search method'''
     def dfs(self, start):
         """yield nodes in depth first traversal order"""
-        visited = set()
-        stack = [start]
+        visited = set([start])
+        stack = list(reversed(sorted(self.successors(start))))
         while stack:
             node = stack.pop()
             if node not in visited:
@@ -113,8 +113,8 @@ class TraversableDigraph(SortableDigraph):
                 stack.extend(reversed(sorted(self.successors(node))))
     def bfs(self, start):
         """yield nodes in breadth first traversal order"""
-        visited = set()
-        queue = deque([start])
+        visited = set([start])
+        queue = deque(sorted(self.successors(start)))
         while queue:
             node = queue.popleft()
             if node not in visited:
@@ -130,8 +130,8 @@ class DAG(TraversableDigraph):
             raise ValueError(f"adding edge {start}->{end} will create a cycle")
         super().add_edge(
             start, end,
-            start_node_value=None,
-            end_node_value=None,
+            start_node_value=start_node_value,
+            end_node_value=start_node_value,
             edge_name=edge_name if edge_name else "default",
             edge_weight=edge_weight
         )
