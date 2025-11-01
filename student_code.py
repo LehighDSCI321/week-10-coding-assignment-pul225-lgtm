@@ -120,6 +120,7 @@ class TraversableDigraph(SortableDigraph):
                 yield node
                 queue.extend(sorted(self.successors(node)))
 class DAG(TraversableDigraph):
+    '''adds an add edge method to prevent cycle'''
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
                  edge_name="default", edge_weight=1):
         """Add edge only if it doesn't create a cycle"""
