@@ -133,4 +133,3 @@ class DAG(TraversableDigraph):
             edge_name=edge_name if edge_name else "default",
             edge_weight=edge_weight
         )
-                     
