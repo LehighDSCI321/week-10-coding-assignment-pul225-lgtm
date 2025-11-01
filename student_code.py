@@ -111,7 +111,7 @@ class TraversableDigraph(SortableDigraph):
     def bfs(self, start):
         """yield nodes in breadth first traversal order"""
         visited = set()
-        queue = deque[start]
+        queue = deque([start])
         while queue:
             node = queue.popleft()
             if node not in visited:
@@ -124,5 +124,9 @@ class DAG(TraversableDigraph):
         for node in self.dfs(end):
             if node == start:
                 raise ValueError(f"adding edge {start}->{end} will create a cycle")
-            super().add_edge(start, end, edge_weight, edge_name)
+            super().add_edge(start, end,
+            start_node_value=None,
+            end_node_value=None,
+            edge_name=edge_name if edge_name else "default",
+            edge_weight=edge_weight)
             
