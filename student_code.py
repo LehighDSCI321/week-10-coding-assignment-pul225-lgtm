@@ -98,6 +98,7 @@ class SortableDigraph(VersatileDigraph):
             raise ValueError("graph contains a cycle")
         return sorted_list
 class TraversableDigraph(SortableDigraph):
+    '''adds depth first and breadth first search method'''
     def dfs(self, start):
         """yield nodes in depth first traversal order"""
         visited = set()
@@ -131,4 +132,4 @@ class DAG(TraversableDigraph):
             edge_name=edge_name if edge_name else "default",
             edge_weight=edge_weight
         )
-        
+                     
