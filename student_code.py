@@ -98,7 +98,7 @@ class SortableDigraph(VersatileDigraph):
             raise ValueError("graph contains a cycle")
         return sorted_list
     def dfs(self, start):
-    """yield nodes in depth first traversal order"""
+        """yield nodes in depth first traversal order"""
         visited = set()
         stack = [start]
         while stack:
@@ -108,7 +108,7 @@ class SortableDigraph(VersatileDigraph):
                 yield node
                 stack.extend(reversed(self.successors(node)))
     def bfs(self, start):
-    """yield nodes in breadth first traversal order"""
+        """yield nodes in breadth first traversal order"""
         visited = set()
         queue = deque[start]
         while queue:
@@ -118,7 +118,7 @@ class SortableDigraph(VersatileDigraph):
                 yield node
                 queue.extend(self.successors(node))
     def add_edge(self, start, end, edge_weight=1, edge_name=None):
-    """add edge only if it doesn't create a cycle"""
+        """add edge only if it doesn't create a cycle"""
         for node in self.dfs(end):
             if node == start:
                 raise ValueError(f"adding edge {start}->{end} will create a cycle")
