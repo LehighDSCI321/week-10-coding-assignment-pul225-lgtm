@@ -109,15 +109,15 @@ class TraversableDigraph(SortableDigraph):
                 yield node
                 stack.extend(reversed(self.successors(node)))
     def bfs(self, start):
-        """yield nodes in breadth first traversal order (excluding start node)"""
-        visited = set([start])
-        queue = deque(self.successors(start))
-        while queue:
-            node = queue.popleft()
-            if node not in visited:
-                visited.add(node)
-                yield node
-                queue.extend(self.successors(node))
+    """yield nodes in breadth first traversal order"""
+    visited = set([start])
+    queue = deque(sorted(self.successors(start)))
+    while queue:
+        node = queue.popleft()
+        if node not in visited:
+            visited.add(node)
+            yield node
+            queue.extend(sorted(self.successors(node)))
 class DAG(TraversableDigraph):
     def add_edge(self, start, end, edge_weight=1, edge_name=None):
         """Add edge only if it doesn't create a cycle"""
