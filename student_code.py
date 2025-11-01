@@ -97,6 +97,7 @@ class SortableDigraph(VersatileDigraph):
         if len(sorted_list) != len(self.nodes):
             raise ValueError("graph contains a cycle")
         return sorted_list
+class TraversableDigraph(SortableDigraph):
     def dfs(self, start):
         """yield nodes in depth first traversal order"""
         visited = set()
@@ -123,3 +124,4 @@ class SortableDigraph(VersatileDigraph):
             if node == start:
                 raise ValueError(f"adding edge {start}->{end} will create a cycle")
             super.add_edge(start, end, edge_weight, edge_name)
+            
