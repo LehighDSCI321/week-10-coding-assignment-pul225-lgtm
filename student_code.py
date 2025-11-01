@@ -121,15 +121,19 @@ class TraversableDigraph(SortableDigraph):
 class DAG(TraversableDigraph):
     def add_edge(self, start, end, edge_weight=1, edge_name=None):
         """add edge only if it doesn't create a cycle"""
+        if start == end:
+            raise ValueError(f"Adding edge {start}->{end} will create a self-cycle")
         visited = set()
-        stack = [end]
-        while stack:
-            node = stack.pop()
+        queue = deque([end])
+        while queue:
+            node = queue.popleft()
             if node == start:
-                raise ValueError(f"adding edge {start}->{end} will create a cycle")
+                raise ValueError(f"Adding edge {start}->{end} will create a cycle")
             if node not in visited:
                 visited.add(node)
-                stack.extend(self.successors(node))
+                for successor in self.successors(node):
+                    if successor not in visited:
+                        queue.append(successor)
         super().add_edge(
             start, end,
             start_node_value=None,
