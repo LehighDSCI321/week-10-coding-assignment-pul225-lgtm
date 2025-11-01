@@ -99,9 +99,9 @@ class SortableDigraph(VersatileDigraph):
         return sorted_list
 class TraversableDigraph(SortableDigraph):
     def dfs(self, start):
-        """yield nodes in depth first traversal order"""
-        visited = set()
-        stack = [start]
+        """yield nodes in depth first traversal order (excluding start node)"""
+        visited = set([start])
+        stack = list(reversed(self.successors(start)))
         while stack:
             node = stack.pop()
             if node not in visited:
@@ -109,9 +109,9 @@ class TraversableDigraph(SortableDigraph):
                 yield node
                 stack.extend(reversed(self.successors(node)))
     def bfs(self, start):
-        """yield nodes in breadth first traversal order"""
-        visited = set()
-        queue = deque([start])
+        """yield nodes in breadth first traversal order (excluding start node)"""
+        visited = set([start])
+        queue = deque(self.successors(start))
         while queue:
             node = queue.popleft()
             if node not in visited:
@@ -121,12 +121,20 @@ class TraversableDigraph(SortableDigraph):
 class DAG(TraversableDigraph):
     def add_edge(self, start, end, edge_weight=1, edge_name=None):
         """add edge only if it doesn't create a cycle"""
-        for node in self.dfs(end):
+        visited = set()
+        stack = [end]
+        while stack:
+            node = stack.pop()
             if node == start:
                 raise ValueError(f"adding edge {start}->{end} will create a cycle")
-            super().add_edge(start, end,
+            if node not in visited:
+                visited.add(node)
+                stack.extend(self.successors(node))
+        super().add_edge(
+            start, end,
             start_node_value=None,
             end_node_value=None,
             edge_name=edge_name if edge_name else "default",
-            edge_weight=edge_weight)
-            
+            edge_weight=edge_weight
+        )
+        
