@@ -114,32 +114,24 @@ class TraversableDigraph(SortableDigraph):
                 stack.extend(reversed(self.successors(node)))
         return result
     def bfs(self, start):
-    """Breadth-first search traversal from the start node using yield (excluding start)"""
-    if start not in self.nodes:
-        raise KeyError(f"Start node '{start}' not found in graph.")
-    visited = set([start])
-    queue = deque(self.successors(start))
-    while queue:
-        node = queue.popleft()
-        if node not in visited:
-            visited.add(node)
-            yield node
-            queue.extend(self.successors(node))
+        """Breadth-first search traversal from the start node using yield"""
+        if start not in self.nodes:
+            raise KeyError(f"Start node '{start}' not found in graph.")
+        visited = set()
+        queue = deque([start])
+        while queue:
+            node = queue.popleft()
+            if node not in visited:
+                visited.add(node)
+                yield node
+                queue.extend(self.successors(node))
 class DAG(TraversableDigraph):
     '''apply a add edge method'''
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
                  edge_name="default", edge_weight=0):
         """Add edge only if it does not create a cycle"""
-        self.add_node(start, start_node_value if start_node_value is not None else 0)
-        self.add_node(end, end_node_value if end_node_value is not None else 0)
-        if start not in self.edges:
-            self.edges[start] = {}
-            self.edge_names[start] = {}
-        self.edges[start][end] = (edge_weight, edge_name)
-        self.edge_names[start][edge_name] = end
-        try:
-            self.top_sort()
-        except ValueError:
-            del self.edges[start][end]
-            del self.edge_names[start][edge_name]
-            raise ValueError(f"Adding edge {start} → {end} would create a cycle.")
+        if end in self.nodes:
+            for node in self.dfs(end):
+                if node == start:
+                    raise ValueError(f"Adding edge {start} → {end} would create a cycle.")
+        super().add_edge(start, end, start_node_value, end_node_value, edge_name, edge_weight)
