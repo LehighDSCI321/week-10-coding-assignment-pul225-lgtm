@@ -30,12 +30,12 @@ class VersatileDigraph():
         self.add_node(start, start_node_value if start_node_value is not None else 0)
         self.add_node(end, end_node_value if end_node_value is not None else 0)
         if start not in self.edges:
-            self.edges[start] = {}
+            self.edges[start] = []
             self.edge_names[start] = {}
         if edge_name in self.edge_names[start]:
             old_end = self.edge_names[start][edge_name]
-            del self.edges[start][old_end]
-        self.edges[start][end] = (edge_weight, edge_name)
+            self.edges[start] = [(e, w, n) for (e, w, n) in self.edges[start] if e != old_end]
+        self.edges[start].append((end, edge_weight, edge_name))
         self.edge_names[start][edge_name] = end
     def get_nodes(self):
         """Return a list of all node IDs"""
@@ -66,7 +66,7 @@ class VersatileDigraph():
         """Return a list of nodes that are directly reachable from the given node"""
         if node not in self.edges:
             return []
-        return sorted(self.edges[node].keys())
+        return [end for (end, _, _) in self.edges[node]]
     def successor_on_edge(self, node, edge_name):
         """Return the target node connected via a specific edge name from the given node"""
         if node not in self.edge_names:
@@ -101,18 +101,16 @@ class SortableDigraph(VersatileDigraph):
         return sorted_list
 class TraversableDigraph(SortableDigraph):
     '''adds depth first and breadth first search method'''
-    def dfs(self, start):
-        """yield nodes in depth first traversal order"""
-        if start not in self.nodes:
-            raise KeyError(f"Node '{start}' does not exist")
-        visited = set([start])
-        stack = list(reversed(self.successors(start)))
-        while stack:
-            node = stack.pop()
-            if node not in visited:
-                visited.add(node)
-                yield node
-                stack.extend(reversed(self.successors(node)))
+    if start not in self.nodes:
+        raise KeyError(f"Node '{start}' does not exist")
+    visited = set([start])
+    stack = list(reversed(self.successors(start)))
+    while stack:
+        node = stack.pop()
+        if node not in visited:
+            visited.add(node)
+            yield node
+            stack.extend(reversed(self.successors(node)))
     def bfs(self, start):
         """yield nodes in breadth first traversal order"""
         visited = set([start])
