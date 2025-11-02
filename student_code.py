@@ -143,4 +143,3 @@ class DAG(TraversableDigraph):
             del self.edges[start][end]
             del self.edge_names[start][edge_name]
             raise ValueError(f"Adding edge {start} → {end} would create a cycle.")
-            
