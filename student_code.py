@@ -128,7 +128,7 @@ class DAG(TraversableDigraph):
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
                  edge_name="default", edge_weight=1):
         """Add edge only if it doesn't create a cycle"""
-        if start in self.dfs(end):
+        if start in list(self.dfs(end)):
             raise ValueError(f"adding edge {start}->{end} will create a cycle")
         super().add_edge(
             start, end,
