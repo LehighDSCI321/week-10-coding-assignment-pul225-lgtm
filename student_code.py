@@ -75,7 +75,7 @@ class VersatileDigraph():
     def in_degree(self, node):
         """Count how many edges point to the given node"""
         return sum(1 for source, targets in self.edges.items() if node in targets)
-class SortableDigraph():
+class SortableDigraph(VersatileDigraph):
     '''return a topologically sorted list of nodes using Kahn's algorithm'''
     def top_sort(self):
         """return a topologically sorted list list of nodes in the graph"""
