@@ -104,9 +104,9 @@ class TraversableDigraph(SortableDigraph):
     def dfs(self, start):
         """yield nodes in depth first traversal order"""
         if start not in self.nodes:
-            raise KeyError(f"Node '{start}' does not exist")
-        visited = set([start])
-        stack = list(reversed(self.successors(start)))
+        raise KeyError(f"Node '{start}' does not exist")
+        visited = set()
+        stack = [start]
         while stack:
             node = stack.pop()
             if node not in visited:
