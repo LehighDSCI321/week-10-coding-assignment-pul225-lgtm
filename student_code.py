@@ -1,4 +1,6 @@
-class SortableDigraph(VersatileDigraph):
+from collections import deque
+
+class SortableDigraph():
     '''return a topologically sorted list of nodes using Kahn's algorithm'''
     def top_sort(self):
         """return a topologically sorted list list of nodes in the graph"""
