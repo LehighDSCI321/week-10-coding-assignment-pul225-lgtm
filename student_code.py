@@ -103,14 +103,16 @@ class TraversableDigraph(SortableDigraph):
     '''adds depth first and breadth first search method'''
     def dfs(self, start):
         """yield nodes in depth first traversal order"""
+        if start not in self.nodes:
+            raise KeyError(f"Node '{start}' does not exist")
         visited = set([start])
-        stack = list(reversed(sorted(self.successors(start))))
+        stack = list(reversed(self.successors(start)))
         while stack:
             node = stack.pop()
             if node not in visited:
                 visited.add(node)
                 yield node
-                stack.extend(reversed(sorted(self.successors(node))))
+                stack.extend(reversed(self.successors(node)))
     def bfs(self, start):
         """yield nodes in breadth first traversal order"""
         visited = set([start])
