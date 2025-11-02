@@ -1,5 +1,7 @@
+"""
+Module for defining the VersatileDigraph class and its node/edge operations
+"""
 from collections import deque
-
 class SortableDigraph():
     '''return a topologically sorted list of nodes using Kahn's algorithm'''
     def top_sort(self):
@@ -23,6 +25,7 @@ class SortableDigraph():
             raise ValueError("graph contains a cycle")
         return sorted_list
 class TraversableDigraph(SortableDigraph):
+    '''apply dfs and bfs'''
     def dfs(self, start):
         """Depth-first search traversal from the start node"""
         if start not in self.nodes:
@@ -51,6 +54,7 @@ class TraversableDigraph(SortableDigraph):
                 yield node
                 queue.extend(self.successors(node))
 class DAG(TraversableDigraph):
+    '''apply a add edge method'''
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
                  edge_name="default", edge_weight=0):
         """Add edge only if it does not create a cycle"""
