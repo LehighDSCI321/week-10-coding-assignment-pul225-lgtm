@@ -87,18 +87,17 @@ class TraversableDigraph(SortableDigraph):
                 stack.extend(reversed(sorted(self.successors(node))))
         return result
     def bfs(self, start):
-        """Breadth-first search traversal from the start node using yield."""
+        """Breadth-first search traversal from the start node"""
         if start not in self.nodes:
             raise KeyError(f"Start node '{start}' not found in graph.")
         visited = set([start])
-        queue = deque([start])
+        queue = deque(self.successors(start))
         while queue:
             node = queue.popleft()
-            yield node
-            for nbr in sorted(self.successors(node)):
-                if nbr not in visited:
-                    visited.add(nbr)
-                    queue.append(nbr)
+            if node not in visited:
+                visited.add(node)
+                yield node
+                queue.extend(self.successors(node))
 class DAG(TraversableDigraph):
     '''A DAG that prevents cycle creation.'''
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
