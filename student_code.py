@@ -19,7 +19,7 @@ class VersatileDigraph:
             self.nodes[node_id] = start_node_value
             self.edges[node_id] = {}
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
-                 edge_name="default", edge_weight=0):
+                 _="default", edge_weight=0):
         """Add a directed edge to the graph."""
         if not isinstance(start, str) or not isinstance(end, str):
             raise TypeError('Node name must be a string')
@@ -106,7 +106,7 @@ class TraversableDigraph(SortableDigraph):
 class DAG(TraversableDigraph):
     '''A DAG that prevents cycle creation.'''
     def add_edge(self, start, end, *, start_node_value=None, end_node_value=None,
-                 edge_name="default", edge_weight=0):
+                 _="default", edge_weight=0):
         """Add edge only if it does not create a cycle"""
         edge_existed = end in self.edges.get(start, {})
         old_weight = self.edges[start][end] if edge_existed else None
