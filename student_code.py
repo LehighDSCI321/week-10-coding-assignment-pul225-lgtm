@@ -73,18 +73,18 @@ class SortableDigraph(VersatileDigraph):
 class TraversableDigraph(SortableDigraph):
     '''Apply DFS and BFS.'''
     def dfs(self, start):
-        """Depth-first search traversal from the start node."""
+        """Depth-first search traversal from the start node"""
         if start not in self.nodes:
             raise KeyError(f"Start node '{start}' not found in graph.")
-        visited = set()
-        stack = [start]
+        visited = set([start])
+        stack = list(reversed(self.successors(start)))
         result = []
         while stack:
             node = stack.pop()
             if node not in visited:
                 visited.add(node)
                 result.append(node)
-                stack.extend(reversed(sorted(self.successors(node))))
+                stack.extend(reversed(self.successors(node)))
         return result
     def bfs(self, start):
         """Breadth-first search traversal from the start node"""
