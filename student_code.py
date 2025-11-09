@@ -48,6 +48,11 @@ class VersatileDigraph:
         if node not in self.edges:
             return []
         return list(self.edges[node].keys())
+    def predecessors(self, node):
+        """Return a list of nodes that have edges pointing to the given node."""
+        if node not in self.nodes:
+            raise KeyError(f"Node '{node}' does not exist in the graph.")
+        return [source for source, targets in self.edges.items() if node in targets]
 class SortableDigraph(VersatileDigraph):
     '''Return a topologically sorted list of nodes using Kahn's algorithm.'''
     def top_sort(self):
