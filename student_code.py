@@ -19,7 +19,7 @@ class VersatileDigraph:
             self.nodes[node_id] = start_node_value
             self.edges[node_id] = {}
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
-                 _="default", edge_weight=0):
+                 edge_name="default", edge_weight=0):
         """Add a directed edge to the graph."""
         if not isinstance(start, str) or not isinstance(end, str):
             raise TypeError('Node name must be a string')
@@ -111,12 +111,12 @@ class DAG(TraversableDigraph):
         edge_existed = end in self.edges.get(start, {})
         old_weight = self.edges[start][end] if edge_existed else None
         super().add_edge(start, end, 
-                         start_node_value=start_node_value, 
-                         end_node_value=end_node_value, 
+                         start_node_value=start_node_value,
+                         end_node_value=end_node_value,
                          edge_weight=edge_weight)
         try:
             self.top_sort()
-        except ValueError as e: # MODIFICATION: 捕获原始异常 e
+        except ValueError as e:
             if edge_existed and old_weight is not None:
                 self.edges[start][end] = old_weight
             else:
