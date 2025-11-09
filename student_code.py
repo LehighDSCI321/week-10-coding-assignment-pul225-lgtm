@@ -19,7 +19,7 @@ class VersatileDigraph:
             self.nodes[node_id] = start_node_value
             self.edges[node_id] = {}
     def add_edge(self, start, end, start_node_value=None, end_node_value=None,
-                 edge_name="default", edge_weight=0):
+                 _="default", edge_weight=0):
         """Add a directed edge to the graph."""
         if not isinstance(start, str) or not isinstance(end, str):
             raise TypeError('Node name must be a string')
@@ -105,12 +105,21 @@ class TraversableDigraph(SortableDigraph):
                 queue.extend(self.successors(node))
 class DAG(TraversableDigraph):
     '''A DAG that prevents cycle creation.'''
-    def add_edge(self, start, end, start_node_value=None, end_node_value=None,
+    def add_edge(self, start, end, *, start_node_value=None, end_node_value=None,
                  edge_name="default", edge_weight=0):
-        """Add edge only if it does not create a cycle."""
-        super().add_edge(start, end, start_node_value, end_node_value, edge_name, edge_weight)
+        """Add edge only if it does not create a cycle"""
+        edge_existed = end in self.edges.get(start, {})
+        old_weight = self.edges[start][end] if edge_existed else None
+        super().add_edge(start, end, 
+                         start_node_value=start_node_value, 
+                         end_node_value=end_node_value, 
+                         edge_weight=edge_weight)
         try:
             self.top_sort()
-        except ValueError:
-            del self.edges[start][end]
-            raise ValueError(f"Adding edge {start} → {end} would create a cycle.")
+        except ValueError as e: # MODIFICATION: 捕获原始异常 e
+            if edge_existed and old_weight is not None:
+                self.edges[start][end] = old_weight
+            else:
+                if start in self.edges and end in self.edges[start]:
+                    del self.edges[start][end]
+            raise ValueError(f"Adding edge {start} → {end} would create a cycle.") from e
