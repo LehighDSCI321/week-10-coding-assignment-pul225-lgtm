@@ -110,7 +110,7 @@ class DAG(TraversableDigraph):
         """Add edge only if it does not create a cycle"""
         edge_existed = end in self.edges.get(start, {})
         old_weight = self.edges[start][end] if edge_existed else None
-        super().add_edge(start, end, 
+        super().add_edge(start, end,
                          start_node_value=start_node_value,
                          end_node_value=end_node_value,
                          _=edge_name,
